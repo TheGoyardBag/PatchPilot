@@ -1,0 +1,23 @@
+{
+  "checks_passed": 13,
+  "checks": [
+    "login_gate",
+    "authenticated_catalog",
+    "run_real_fixture_tests",
+    "event_stream_content",
+    "diff_rendering",
+    "test_evidence",
+    "model_features",
+    "blocked_patch_not_approvable",
+    "human_review",
+    "approved_diff_export",
+    "evaluation_view",
+    "mobile_no_horizontal_overflow",
+    "no_browser_javascript_errors"
+  ],
+  "browser_errors": [],
+  "frontend": "Bundled no-build JavaScript dashboard",
+  "backend": "Real FastAPI server via in-memory fetch bridge; buffered SSE, shimmed session storage, no browser network/CSP validation",
+  "nextjs_tested": false,
+  "test_transport_bridge": true
+}

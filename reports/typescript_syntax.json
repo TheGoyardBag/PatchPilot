@@ -1,0 +1,10 @@
+{
+  "kind": "TypeScript syntactic transpilation only, NOT dependency typecheck or Next.js build",
+  "files": [
+    "frontend/app/layout.tsx",
+    "frontend/app/page.tsx",
+    "frontend/components/workspace.tsx",
+    "frontend/next.config.ts"
+  ],
+  "errors": []
+}

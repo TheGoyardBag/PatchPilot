@@ -1,0 +1,18 @@
+# Local authored-fixture mode only. Do not mount the Docker socket into the API.
+services:
+  api:
+    build: .
+    ports: ["127.0.0.1:8000:8000"]
+    environment:
+      PATCHPILOT_TOKEN: ${PATCHPILOT_TOKEN:?Set a generated local token before starting}
+      PATCHPILOT_RUNNER: trusted-demo
+      PATCHPILOT_ALLOW_EXTERNAL_LLM: "0"
+    volumes: ["state:/app/.patchpilot"]
+    read_only: true
+    tmpfs: ["/tmp:rw,noexec,nosuid,size=128m"]
+    cap_drop: ["ALL"]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 128
+    mem_limit: 768m
+volumes:
+  state:

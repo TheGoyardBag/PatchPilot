@@ -1,0 +1,15 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {escapeHTML,scoreLabel,testLabel,statusClass,parseSSE,diffClass} from '../src/patchpilot/web/utils.mjs';
+test('escapes hostile strings without rendering HTML',()=>assert.equal(escapeHTML('<script>"&\''),'&lt;script&gt;&quot;&amp;&#39;'));
+test('handles null text',()=>assert.equal(escapeHTML(null),''));
+test('ranking scores are displayed, not probability percentages',()=>assert.equal(scoreLabel(.76543),'0.765'));
+test('missing rank',()=>assert.equal(scoreLabel(null),'—'));
+test('test summary',()=>assert.equal(testLabel({passed:3,tests:4}),'3/4 passed'));
+test('blocked summary',()=>assert.equal(testLabel(null),'Policy blocked'));
+test('approval color',()=>assert.equal(statusClass('approved'),'good'));
+test('unknown statuses remain neutral',()=>assert.equal(statusClass('running'),'neutral'));
+test('parse event frame',()=>assert.deepEqual(parseSSE('id: 2\nevent: activity\ndata: {"x":1}\n\n'),[{id:'2',event:'activity',data:{x:1}}]));
+test('ignore heartbeat',()=>assert.deepEqual(parseSSE(': heartbeat\n\n'),[]));
+test('CRLF event parsing',()=>assert.equal(parseSSE('event: complete\r\ndata: {}\r\n\r\n')[0].event,'complete'));
+test('differentiate headers from added code',()=>{assert.equal(diffClass('+++ b/a.py'),'diff-file');assert.equal(diffClass('+x = 1'),'diff-add');assert.equal(diffClass('-x = 0'),'diff-remove');});

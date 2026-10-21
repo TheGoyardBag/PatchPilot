@@ -1,0 +1,52 @@
+name: Validate PatchPilot
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install -e ".[dev,graph]"
+      - run: pytest -q --cov=patchpilot --cov-report=term-missing
+      - run: python -m compileall -q src scripts
+  model:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - run: pip install -e ".[dev,ml]"
+      - run: python scripts/make_benchmarks.py && python scripts/build_dataset.py && python scripts/train_ranker.py
+      - run: pytest -q tests/test_model.py
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/web.test.mjs
+      # Use npm ci once you have generated and committed the real lockfile locally.
+      - run: npm install
+        working-directory: frontend
+      - run: npm run typecheck && npm run build
+        working-directory: frontend
+  isolated-runner:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -e ".[dev]"
+      - run: docker build -f sandbox/Dockerfile -t patchpilot-runner:local .
+      - run: PATCHPILOT_DOCKER_TESTS=1 pytest -q -m docker

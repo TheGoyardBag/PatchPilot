@@ -1,0 +1,322 @@
+{
+  "id": "ec7178aed5b1402a",
+  "task_id": "pagination",
+  "provider": "demo",
+  "issue": "Fix paginate: page is zero-based, size positive, preserve short final pages.",
+  "status": "awaiting_review",
+  "created": 1792566393.0704427,
+  "updated": 1792566393.3894675,
+  "version": 2,
+  "result": {
+    "baseline": {
+      "status": "failed",
+      "tests": 3,
+      "passed": 1,
+      "failed": 2,
+      "errors": 0,
+      "skipped": 0,
+      "duration_s": 0.041491,
+      "output": "test_case_000 (test_public.Cases.test_case_000) ... FAIL\ntest_case_001 (test_public.Cases.test_case_001) ... FAIL\ntest_case_002 (test_public.Cases.test_case_002) ... ok\n\n======================================================================\nFAIL: test_case_000 (test_public.Cases.test_case_000)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/patchpilot-job-qs3f1qee/base/tests/test_public.py\", line 6, in test_case_000\n    self.assertEqual(solve(*[[1, 2, 3, 4], 0, 2]), [1, 2])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [1] != [1, 2]\n\nSecond list contains 1 additional elements.\nFirst extra element 1:\n2\n\n- [1]\n+ [1, 2]\n\n======================================================================\nFAIL: test_case_001 (test_public.Cases.test_case_001)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/patchpilot-job-qs3f1qee/base/tests/test_public.py\", line 9, in test_case_001\n    self.assertEqual(solve(*[[1, 2, 3, 4], 1, 2]), [3, 4])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [3] != [3, 4]\n\nSecond list contains 1 additional elements.\nFirst extra element 1:\n4\n\n- [3]\n+ [3, 4]\n\n----------------------------------------------------------------------\nRan 3 tests in 0.001s\n\nFAILED (failures=2)\n",
+      "failures": [
+        {
+          "test": "test_case_000 (test_public.Cases.test_case_000)",
+          "detail": "Traceback (most recent call last):\n  File \"/tmp/patchpilot-job-qs3f1qee/base/tests/test_public.py\", line 6, in test_case_000\n    self.assertEqual(solve(*[[1, 2, 3, 4], 0, 2]), [1, 2])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [1] != [1, 2]\n\nSecond list contains 1 additional elements.\nFirst extra element 1:\n2\n\n- [1]\n+ [1, 2]\n"
+        },
+        {
+          "test": "test_case_001 (test_public.Cases.test_case_001)",
+          "detail": "Traceback (most recent call last):\n  File \"/tmp/patchpilot-job-qs3f1qee/base/tests/test_public.py\", line 9, in test_case_001\n    self.assertEqual(solve(*[[1, 2, 3, 4], 1, 2]), [3, 4])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [3] != [3, 4]\n\nSecond list contains 1 additional elements.\nFirst extra element 1:\n4\n\n- [3]\n+ [3, 4]\n"
+        }
+      ],
+      "runner": "trusted-demo",
+      "exit_code": 1
+    },
+    "candidates": [
+      {
+        "id": "512708da7a66",
+        "title": "Alternative implementation",
+        "rationale": "Authored benchmark proposal. Compare observed tests and the diff before deciding.",
+        "eligible": true,
+        "score": 0.7515703439712524,
+        "diff": "--- a/src/subject.py\n+++ b/src/subject.py\n@@ -1,3 +1,4 @@\n def solve(items, page, size):\n+    # Preserve the behavior outside the reported example.\n     start = page * size\n-    return items[start:start + size - 1]\n+    return items[start:start + size]\n",
+        "test_result": {
+          "status": "passed",
+          "tests": 3,
+          "passed": 3,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0,
+          "duration_s": 0.04097,
+          "output": "test_case_000 (test_public.Cases.test_case_000) ... ok\ntest_case_001 (test_public.Cases.test_case_001) ... ok\ntest_case_002 (test_public.Cases.test_case_002) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.000s\n\nOK\n",
+          "failures": [],
+          "runner": "trusted-demo",
+          "exit_code": 0
+        },
+        "status": "tested",
+        "policy_error": null,
+        "features": {
+          "public_pass_fraction": 1.0,
+          "public_error_fraction": 0.0,
+          "public_test_count_log": 1.3862943649291992,
+          "public_complete_pass": 1.0,
+          "added_lines_log": 1.0986123085021973,
+          "deleted_lines_log": 0.6931471824645996,
+          "changed_fraction": 1.0,
+          "ast_nodes_log": 3.4011974334716797,
+          "ast_node_delta": -0.09375,
+          "constant_fraction": 0.0,
+          "string_literal_chars_log": 0.0,
+          "numeric_literals_log": 0.0,
+          "dict_entries_log": 0.0,
+          "bare_constant_returns": 0.0,
+          "branches_log": 0.0,
+          "loops_log": 0.0,
+          "calls_log": 0.0,
+          "repr_calls": 0.0,
+          "functions_removed": 0.0,
+          "token_overlap": 0.5384615659713745,
+          "source_changed": 1.0,
+          "file_count_log": 0.6931471824645996
+        }
+      },
+      {
+        "id": "76aeebe1196d",
+        "title": "Partial adjustment",
+        "rationale": "Authored benchmark proposal. Compare observed tests and the diff before deciding.",
+        "eligible": true,
+        "score": 0.723558247089386,
+        "diff": "--- a/src/subject.py\n+++ b/src/subject.py\n@@ -1,3 +1,2 @@\n def solve(items, page, size):\n-    start = page * size\n-    return items[start:start + size - 1]\n+    return items[page * size:(page + 1) * size] if len(items) >= size else []\n",
+        "test_result": {
+          "status": "passed",
+          "tests": 3,
+          "passed": 3,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0,
+          "duration_s": 0.040794,
+          "output": "test_case_000 (test_public.Cases.test_case_000) ... ok\ntest_case_001 (test_public.Cases.test_case_001) ... ok\ntest_case_002 (test_public.Cases.test_case_002) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.000s\n\nOK\n",
+          "failures": [],
+          "runner": "trusted-demo",
+          "exit_code": 0
+        },
+        "status": "tested",
+        "policy_error": null,
+        "features": {
+          "public_pass_fraction": 1.0,
+          "public_error_fraction": 0.0,
+          "public_test_count_log": 1.3862943649291992,
+          "public_complete_pass": 1.0,
+          "added_lines_log": 0.6931471824645996,
+          "deleted_lines_log": 1.0986123085021973,
+          "changed_fraction": 1.0,
+          "ast_nodes_log": 3.6888794898986816,
+          "ast_node_delta": 0.21875,
+          "constant_fraction": 0.025641025975346565,
+          "string_literal_chars_log": 0.0,
+          "numeric_literals_log": 0.6931471824645996,
+          "dict_entries_log": 0.0,
+          "bare_constant_returns": 0.0,
+          "branches_log": 0.6931471824645996,
+          "loops_log": 0.0,
+          "calls_log": 0.6931471824645996,
+          "repr_calls": 0.0,
+          "functions_removed": 0.0,
+          "token_overlap": 0.6000000238418579,
+          "source_changed": 1.0,
+          "file_count_log": 0.6931471824645996
+        }
+      },
+      {
+        "id": "fb16b42a72a7",
+        "title": "Focused implementation",
+        "rationale": "Authored benchmark proposal. Compare observed tests and the diff before deciding.",
+        "eligible": true,
+        "score": 0.5537434220314026,
+        "diff": "--- a/src/subject.py\n+++ b/src/subject.py\n@@ -1,3 +1,3 @@\n def solve(items, page, size):\n     start = page * size\n-    return items[start:start + size - 1]\n+    return items[start:start + size]\n",
+        "test_result": {
+          "status": "passed",
+          "tests": 3,
+          "passed": 3,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0,
+          "duration_s": 0.040916,
+          "output": "test_case_000 (test_public.Cases.test_case_000) ... ok\ntest_case_001 (test_public.Cases.test_case_001) ... ok\ntest_case_002 (test_public.Cases.test_case_002) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.000s\n\nOK\n",
+          "failures": [],
+          "runner": "trusted-demo",
+          "exit_code": 0
+        },
+        "status": "tested",
+        "policy_error": null,
+        "features": {
+          "public_pass_fraction": 1.0,
+          "public_error_fraction": 0.0,
+          "public_test_count_log": 1.3862943649291992,
+          "public_complete_pass": 1.0,
+          "added_lines_log": 0.6931471824645996,
+          "deleted_lines_log": 0.6931471824645996,
+          "changed_fraction": 0.6666666865348816,
+          "ast_nodes_log": 3.4011974334716797,
+          "ast_node_delta": -0.09375,
+          "constant_fraction": 0.0,
+          "string_literal_chars_log": 0.0,
+          "numeric_literals_log": 0.0,
+          "dict_entries_log": 0.0,
+          "bare_constant_returns": 0.0,
+          "branches_log": 0.0,
+          "loops_log": 0.0,
+          "calls_log": 0.0,
+          "repr_calls": 0.0,
+          "functions_removed": 0.0,
+          "token_overlap": 1.0,
+          "source_changed": 1.0,
+          "file_count_log": 0.6931471824645996
+        }
+      },
+      {
+        "id": "c3c74b8de3ba",
+        "title": "Case-specific replacement",
+        "rationale": "Authored benchmark proposal. Compare observed tests and the diff before deciding.",
+        "eligible": true,
+        "score": 0.01379005704075098,
+        "diff": "--- a/src/subject.py\n+++ b/src/subject.py\n@@ -1,3 +1,3 @@\n def solve(items, page, size):\n-    start = page * size\n-    return items[start:start + size - 1]\n+    lookup = {'([1, 2, 3, 4], 0, 2)': [1, 2], '([1, 2, 3, 4], 1, 2)': [3, 4], '([], 0, 3)': []}\n+    return lookup.get(repr((items, page, size,)))\n",
+        "test_result": {
+          "status": "passed",
+          "tests": 3,
+          "passed": 3,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0,
+          "duration_s": 0.040823,
+          "output": "test_case_000 (test_public.Cases.test_case_000) ... ok\ntest_case_001 (test_public.Cases.test_case_001) ... ok\ntest_case_002 (test_public.Cases.test_case_002) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.000s\n\nOK\n",
+          "failures": [],
+          "runner": "trusted-demo",
+          "exit_code": 0
+        },
+        "status": "tested",
+        "policy_error": null,
+        "features": {
+          "public_pass_fraction": 1.0,
+          "public_error_fraction": 0.0,
+          "public_test_count_log": 1.3862943649291992,
+          "public_complete_pass": 1.0,
+          "added_lines_log": 1.0986123085021973,
+          "deleted_lines_log": 1.0986123085021973,
+          "changed_fraction": 1.3333333730697632,
+          "ast_nodes_log": 3.7135720252990723,
+          "ast_node_delta": 0.25,
+          "constant_fraction": 0.17499999701976776,
+          "string_literal_chars_log": 3.931825637817383,
+          "numeric_literals_log": 1.6094379425048828,
+          "dict_entries_log": 1.3862943649291992,
+          "bare_constant_returns": 0.0,
+          "branches_log": 0.0,
+          "loops_log": 0.0,
+          "calls_log": 1.0986123085021973,
+          "repr_calls": 1.0,
+          "functions_removed": 0.0,
+          "token_overlap": 0.6000000238418579,
+          "source_changed": 1.0,
+          "file_count_log": 0.6931471824645996
+        }
+      },
+      {
+        "id": "547030517a27",
+        "title": "Early-return alternative",
+        "rationale": "Authored benchmark proposal. Compare observed tests and the diff before deciding.",
+        "eligible": false,
+        "score": 0.01256971899420023,
+        "diff": "--- a/src/subject.py\n+++ b/src/subject.py\n@@ -1,3 +1,2 @@\n def solve(items, page, size):\n-    start = page * size\n-    return items[start:start + size - 1]\n+    return [1, 2]\n",
+        "test_result": {
+          "status": "failed",
+          "tests": 3,
+          "passed": 1,
+          "failed": 2,
+          "errors": 0,
+          "skipped": 0,
+          "duration_s": 0.051235,
+          "output": "test_case_000 (test_public.Cases.test_case_000) ... ok\ntest_case_001 (test_public.Cases.test_case_001) ... FAIL\ntest_case_002 (test_public.Cases.test_case_002) ... FAIL\n\n======================================================================\nFAIL: test_case_001 (test_public.Cases.test_case_001)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/patchpilot-patch-ug63hxl3/repo/tests/test_public.py\", line 9, in test_case_001\n    self.assertEqual(solve(*[[1, 2, 3, 4], 1, 2]), [3, 4])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [1, 2] != [3, 4]\n\nFirst differing element 0:\n1\n3\n\n- [1, 2]\n+ [3, 4]\n\n======================================================================\nFAIL: test_case_002 (test_public.Cases.test_case_002)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/patchpilot-patch-ug63hxl3/repo/tests/test_public.py\", line 12, in test_case_002\n    self.assertEqual(solve(*[[], 0, 3]), [])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [1, 2] != []\n\nFirst list contains 2 additional elements.\nFirst extra element 0:\n1\n\n- [1, 2]\n+ []\n\n----------------------------------------------------------------------\nRan 3 tests in 0.001s\n\nFAILED (failures=2)\n",
+          "failures": [
+            {
+              "test": "test_case_001 (test_public.Cases.test_case_001)",
+              "detail": "Traceback (most recent call last):\n  File \"/tmp/patchpilot-patch-ug63hxl3/repo/tests/test_public.py\", line 9, in test_case_001\n    self.assertEqual(solve(*[[1, 2, 3, 4], 1, 2]), [3, 4])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [1, 2] != [3, 4]\n\nFirst differing element 0:\n1\n3\n\n- [1, 2]\n+ [3, 4]\n"
+            },
+            {
+              "test": "test_case_002 (test_public.Cases.test_case_002)",
+              "detail": "Traceback (most recent call last):\n  File \"/tmp/patchpilot-patch-ug63hxl3/repo/tests/test_public.py\", line 12, in test_case_002\n    self.assertEqual(solve(*[[], 0, 3]), [])\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Lists differ: [1, 2] != []\n\nFirst list contains 2 additional elements.\nFirst extra element 0:\n1\n\n- [1, 2]\n+ []\n"
+            }
+          ],
+          "runner": "trusted-demo",
+          "exit_code": 1
+        },
+        "status": "tested",
+        "policy_error": null,
+        "features": {
+          "public_pass_fraction": 0.3333333432674408,
+          "public_error_fraction": 0.0,
+          "public_test_count_log": 1.3862943649291992,
+          "public_complete_pass": 0.0,
+          "added_lines_log": 0.6931471824645996,
+          "deleted_lines_log": 1.0986123085021973,
+          "changed_fraction": 1.0,
+          "ast_nodes_log": 2.4849066734313965,
+          "ast_node_delta": -0.65625,
+          "constant_fraction": 0.1818181872367859,
+          "string_literal_chars_log": 0.0,
+          "numeric_literals_log": 1.0986123085021973,
+          "dict_entries_log": 0.0,
+          "bare_constant_returns": 0.0,
+          "branches_log": 0.0,
+          "loops_log": 0.0,
+          "calls_log": 0.0,
+          "repr_calls": 0.0,
+          "functions_removed": 0.0,
+          "token_overlap": 0.8571428656578064,
+          "source_changed": 1.0,
+          "file_count_log": 0.6931471824645996
+        }
+      },
+      {
+        "id": "1c2bd536b977",
+        "title": "Original implementation",
+        "rationale": "Authored benchmark proposal. Compare observed tests and the diff before deciding.",
+        "eligible": false,
+        "score": null,
+        "diff": "",
+        "test_result": null,
+        "status": "rejected",
+        "policy_error": "No-op edit",
+        "features": null
+      }
+    ],
+    "provider": {
+      "provider": "demo",
+      "live_model": false,
+      "notes": [
+        "Candidate proposals are authored fixtures, not AI-generated. ML ranking and tests run locally."
+      ]
+    },
+    "ranker": {
+      "seed": 17,
+      "architecture": [
+        22,
+        24,
+        12,
+        1
+      ],
+      "best_epoch": 19,
+      "dataset_sha256": "ce0405d47ce00e26aa07a1e860ce897c2a3826112690eabc382a2bc5fbaae749",
+      "training_candidates": 90,
+      "score_semantics": "Uncalibrated ranking score; not probability of repair correctness",
+      "provenance": "Original authored candidate patches, not natural LLM patch distribution"
+    },
+    "elapsed_s": 0.308,
+    "runner": "trusted-demo",
+    "limitations": [
+      "Ranking scores are uncalibrated.",
+      "Public tests are not a correctness proof.",
+      "Approval records a review; it does not push, merge, or modify your original repository."
+    ]
+  },
+  "error": null,
+  "reviews": []
+}

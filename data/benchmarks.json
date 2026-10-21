@@ -1,0 +1,2400 @@
+{
+  "version": 1,
+  "license": "MIT",
+  "provenance": "Original authored repair fixtures; not real GitHub issues or SWE-bench",
+  "tasks": [
+    {
+      "id": "pagination",
+      "family": "slicing",
+      "title": "Pagination drops the last item",
+      "issue": "Fix paginate: page is zero-based, size positive, preserve short final pages.",
+      "source": "def solve(items, page, size):\n    start = page * size\n    return items[start:start + size - 1]\n",
+      "public": [
+        [
+          [
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          [
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        [
+          [
+            [],
+            0,
+            3
+          ],
+          []
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            [
+              8,
+              9,
+              10
+            ],
+            1,
+            2
+          ],
+          [
+            10
+          ]
+        ],
+        [
+          [
+            [
+              7
+            ],
+            0,
+            1
+          ],
+          [
+            7
+          ]
+        ],
+        [
+          [
+            [
+              1,
+              2
+            ],
+            5,
+            2
+          ],
+          []
+        ],
+        [
+          [
+            [
+              7
+            ],
+            0,
+            3
+          ],
+          [
+            7
+          ]
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(items, page, size):\n    # Preserve the behavior outside the reported example.\n    start = page * size\n    return items[start:start + size]\n"
+        },
+        {
+          "name": "Original implementation",
+          "code": "def solve(items, page, size):\n    start = page * size\n    return items[start:start + size - 1]\n"
+        },
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(items, page, size):\n    return [1, 2]\n"
+        },
+        {
+          "name": "Focused implementation",
+          "code": "def solve(items, page, size):\n    start = page * size\n    return items[start:start + size]\n"
+        },
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(items, page, size):\n    lookup = {'([1, 2, 3, 4], 0, 2)': [1, 2], '([1, 2, 3, 4], 1, 2)': [3, 4], '([], 0, 3)': []}\n    return lookup.get(repr((items, page, size,)))\n"
+        },
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(items, page, size):\n    return items[page * size:(page + 1) * size] if len(items) >= size else []\n"
+        }
+      ]
+    },
+    {
+      "id": "chunks",
+      "family": "slicing",
+      "title": "Chunking skips a partial batch",
+      "issue": "Split a list into consecutive chunks including the final incomplete chunk. size is positive.",
+      "source": "def solve(items, size):\n    return [items[i:i+size] for i in range(0,len(items)-size+1,size)]\n",
+      "public": [
+        [
+          [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            2
+          ],
+          [
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              5
+            ]
+          ]
+        ],
+        [
+          [
+            [],
+            2
+          ],
+          []
+        ],
+        [
+          [
+            [
+              1,
+              2
+            ],
+            2
+          ],
+          [
+            [
+              1,
+              2
+            ]
+          ]
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            [
+              5
+            ],
+            4
+          ],
+          [
+            [
+              5
+            ]
+          ]
+        ],
+        [
+          [
+            [
+              2,
+              3,
+              4
+            ],
+            1
+          ],
+          [
+            [
+              2
+            ],
+            [
+              3
+            ],
+            [
+              4
+            ]
+          ]
+        ],
+        [
+          [
+            [
+              9,
+              8,
+              7,
+              6
+            ],
+            3
+          ],
+          [
+            [
+              9,
+              8,
+              7
+            ],
+            [
+              6
+            ]
+          ]
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(items, size):\n    # Preserve the behavior outside the reported example.\n    return [items[i:i+size] for i in range(0,len(items),size)]\n"
+        },
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(items, size):\n    return [[1, 2], [3, 4], [5]]\n"
+        },
+        {
+          "name": "Focused implementation",
+          "code": "def solve(items, size):\n    return [items[i:i+size] for i in range(0,len(items),size)]\n"
+        },
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(items, size):\n    return [items[i:i+size] for i in range(0,len(items),size)] if len(items) > 1 else []\n"
+        },
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(items, size):\n    lookup = {'([1, 2, 3, 4, 5], 2)': [[1, 2], [3, 4], [5]], '([], 2)': [], '([1, 2], 2)': [[1, 2]]}\n    return lookup.get(repr((items, size,)))\n"
+        },
+        {
+          "name": "Original implementation",
+          "code": "def solve(items, size):\n    return [items[i:i+size] for i in range(0,len(items)-size+1,size)]\n"
+        }
+      ]
+    },
+    {
+      "id": "tail",
+      "family": "slicing",
+      "title": "Zero-length tail returns the entire list",
+      "issue": "Return at most n trailing values. n <= 0 must return an empty list.",
+      "source": "def solve(items, n):\n    return items[-n:]\n",
+      "public": [
+        [
+          [
+            [
+              1,
+              2,
+              3
+            ],
+            0
+          ],
+          []
+        ],
+        [
+          [
+            [
+              1,
+              2,
+              3
+            ],
+            2
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        [
+          [
+            [],
+            2
+          ],
+          []
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            [
+              1,
+              2
+            ],
+            -1
+          ],
+          []
+        ],
+        [
+          [
+            [
+              1
+            ],
+            9
+          ],
+          [
+            1
+          ]
+        ],
+        [
+          [
+            [
+              2,
+              3
+            ],
+            1
+          ],
+          [
+            3
+          ]
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(items, n):\n    return []\n"
+        },
+        {
+          "name": "Original implementation",
+          "code": "def solve(items, n):\n    return items[-n:]\n"
+        },
+        {
+          "name": "Focused implementation",
+          "code": "def solve(items, n):\n    return items[-n:] if n > 0 else []\n"
+        },
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(items, n):\n    # Preserve the behavior outside the reported example.\n    return items[-n:] if n > 0 else []\n"
+        },
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(items, n):\n    return [] if n == 0 else items[-n:]\n"
+        },
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(items, n):\n    lookup = {'([1, 2, 3], 0)': [], '([1, 2, 3], 2)': [2, 3], '([], 2)': []}\n    return lookup.get(repr((items, n,)))\n"
+        }
+      ]
+    },
+    {
+      "id": "mean",
+      "family": "arithmetic",
+      "title": "Mean rounds down decimals",
+      "issue": "Return the arithmetic mean as a number, or 0.0 for an empty list.",
+      "source": "def solve(values):\n    return sum(values) // len(values) if values else 0.0\n",
+      "public": [
+        [
+          [
+            [
+              1,
+              2
+            ]
+          ],
+          1.5
+        ],
+        [
+          [
+            []
+          ],
+          0.0
+        ],
+        [
+          [
+            [
+              3,
+              6
+            ]
+          ],
+          4.5
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            [
+              -1,
+              0
+            ]
+          ],
+          -0.5
+        ],
+        [
+          [
+            [
+              1,
+              2,
+              4
+            ]
+          ],
+          2.3333333333333335
+        ],
+        [
+          [
+            [
+              8
+            ]
+          ],
+          8.0
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(values):\n    return 1.5\n"
+        },
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(values):\n    return round(sum(values) / len(values), 1) if values else 0.0\n"
+        },
+        {
+          "name": "Original implementation",
+          "code": "def solve(values):\n    return sum(values) // len(values) if values else 0.0\n"
+        },
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(values):\n    # Preserve the behavior outside the reported example.\n    return sum(values) / len(values) if values else 0.0\n"
+        },
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(values):\n    lookup = {'([1, 2],)': 1.5, '([],)': 0.0, '([3, 6],)': 4.5}\n    return lookup.get(repr((values,)))\n"
+        },
+        {
+          "name": "Focused implementation",
+          "code": "def solve(values):\n    return sum(values) / len(values) if values else 0.0\n"
+        }
+      ]
+    },
+    {
+      "id": "median",
+      "family": "arithmetic",
+      "title": "Even-length median chooses one element",
+      "issue": "Return the median of numeric values; empty input gives None. Do not mutate the input.",
+      "source": "def solve(values):\n    if not values: return None\n    s = sorted(values)\n    return s[len(s)//2]\n",
+      "public": [
+        [
+          [
+            [
+              1,
+              4
+            ]
+          ],
+          2.5
+        ],
+        [
+          [
+            [
+              4,
+              1,
+              2
+            ]
+          ],
+          2
+        ],
+        [
+          [
+            []
+          ],
+          null
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            [
+              7,
+              1,
+              3,
+              9
+            ]
+          ],
+          5.0
+        ],
+        [
+          [
+            [
+              0
+            ]
+          ],
+          0
+        ],
+        [
+          [
+            [
+              -3,
+              -2
+            ]
+          ],
+          -2.5
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Focused implementation",
+          "code": "def solve(values):\n    if not values: return None\n    s = sorted(values)\n    m = len(s)//2\n    return s[m] if len(s)%2 else (s[m-1]+s[m])/2\n"
+        },
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(values):\n    # Preserve the behavior outside the reported example.\n    if not values: return None\n    s = sorted(values)\n    m = len(s)//2\n    return s[m] if len(s)%2 else (s[m-1]+s[m])/2\n"
+        },
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(values):\n    return 2.5\n"
+        },
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(values):\n    if not values: return None\n    s = sorted(values)\n    return sum(s)/len(s)\n"
+        },
+        {
+          "name": "Original implementation",
+          "code": "def solve(values):\n    if not values: return None\n    s = sorted(values)\n    return s[len(s)//2]\n"
+        },
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(values):\n    lookup = {'([1, 4],)': 2.5, '([4, 1, 2],)': 2, '([],)': None}\n    return lookup.get(repr((values,)))\n"
+        }
+      ]
+    },
+    {
+      "id": "discount",
+      "family": "arithmetic",
+      "title": "Percentage discount is interpreted as a multiplier",
+      "issue": "Given nonnegative price and discount percent in [0,100], return discounted price rounded to two decimals.",
+      "source": "def solve(price, percent):\n    return round(price * (1 - percent), 2)\n",
+      "public": [
+        [
+          [
+            100,
+            20
+          ],
+          80.0
+        ],
+        [
+          [
+            80,
+            25
+          ],
+          60.0
+        ],
+        [
+          [
+            10,
+            0
+          ],
+          10.0
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            19.99,
+            10
+          ],
+          17.99
+        ],
+        [
+          [
+            42,
+            100
+          ],
+          0.0
+        ],
+        [
+          [
+            0,
+            15
+          ],
+          0.0
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(price, percent):\n    # Preserve the behavior outside the reported example.\n    return round(price * (1 - percent / 100), 2)\n"
+        },
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(price, percent):\n    return round(price - percent, 2)\n"
+        },
+        {
+          "name": "Original implementation",
+          "code": "def solve(price, percent):\n    return round(price * (1 - percent), 2)\n"
+        },
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(price, percent):\n    lookup = {'(100, 20)': 80.0, '(80, 25)': 60.0, '(10, 0)': 10.0}\n    return lookup.get(repr((price, percent,)))\n"
+        },
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(price, percent):\n    return 80.0\n"
+        },
+        {
+          "name": "Focused implementation",
+          "code": "def solve(price, percent):\n    return round(price * (1 - percent / 100), 2)\n"
+        }
+      ]
+    },
+    {
+      "id": "slug",
+      "family": "strings",
+      "title": "Slug retains surrounding separators",
+      "issue": "Lowercase the words of a string, collapse whitespace to hyphens, and remove surrounding whitespace.",
+      "source": "def solve(text):\n    return text.lower().replace(' ', '-')\n",
+      "public": [
+        [
+          [
+            " Hello  World "
+          ],
+          "hello-world"
+        ],
+        [
+          [
+            "Already"
+          ],
+          "already"
+        ],
+        [
+          [
+            ""
+          ],
+          ""
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            "A\tB\nC"
+          ],
+          "a-b-c"
+        ],
+        [
+          [
+            "  x "
+          ],
+          "x"
+        ],
+        [
+          [
+            "a   b"
+          ],
+          "a-b"
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Focused implementation",
+          "code": "def solve(text):\n    return '-'.join(text.lower().split())\n"
+        },
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(text):\n    return 'hello-world'\n"
+        },
+        {
+          "name": "Original implementation",
+          "code": "def solve(text):\n    return text.lower().replace(' ', '-')\n"
+        },
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(text):\n    return text.strip().lower().replace('  ', ' ').replace(' ', '-')\n"
+        },
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(text):\n    lookup = {\"(' Hello  World ',)\": 'hello-world', \"('Already',)\": 'already', \"('',)\": ''}\n    return lookup.get(repr((text,)))\n"
+        },
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(text):\n    # Preserve the behavior outside the reported example.\n    return '-'.join(text.lower().split())\n"
+        }
+      ]
+    },
+    {
+      "id": "prefix",
+      "family": "strings",
+      "title": "Prefix remover removes internal occurrences",
+      "issue": "Remove prefix only when it appears at the start of text; empty prefix leaves text unchanged.",
+      "source": "def solve(text, prefix):\n    return text.replace(prefix, '')\n",
+      "public": [
+        [
+          [
+            "pre-prefix",
+            "pre-"
+          ],
+          "prefix"
+        ],
+        [
+          [
+            "xpre-value",
+            "pre-"
+          ],
+          "xpre-value"
+        ],
+        [
+          [
+            "hello",
+            ""
+          ],
+          "hello"
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            "aaa",
+            "a"
+          ],
+          "aa"
+        ],
+        [
+          [
+            "test",
+            "z"
+          ],
+          "test"
+        ],
+        [
+          [
+            "abcabc",
+            "abc"
+          ],
+          "abc"
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(text, prefix):\n    lookup = {\"('pre-prefix', 'pre-')\": 'prefix', \"('xpre-value', 'pre-')\": 'xpre-value', \"('hello', '')\": 'hello'}\n    return lookup.get(repr((text, prefix,)))\n"
+        },
+        {
+          "name": "Original implementation",
+          "code": "def solve(text, prefix):\n    return text.replace(prefix, '')\n"
+        },
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(text, prefix):\n    return text.replace(prefix, '', 1)\n"
+        },
+        {
+          "name": "Focused implementation",
+          "code": "def solve(text, prefix):\n    return text[len(prefix):] if prefix and text.startswith(prefix) else text\n"
+        },
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(text, prefix):\n    return 'prefix'\n"
+        },
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(text, prefix):\n    # Preserve the behavior outside the reported example.\n    return text[len(prefix):] if prefix and text.startswith(prefix) else text\n"
+        }
+      ]
+    },
+    {
+      "id": "initials",
+      "family": "strings",
+      "title": "Initials split fails on repeated whitespace",
+      "issue": "Return uppercase initials of whitespace-delimited words; blank input gives an empty string.",
+      "source": "def solve(name):\n    return ''.join(part[0].upper() for part in name.split(' '))\n",
+      "public": [
+        [
+          [
+            " Ada  Lovelace "
+          ],
+          "AL"
+        ],
+        [
+          [
+            "Grace Hopper"
+          ],
+          "GH"
+        ],
+        [
+          [
+            ""
+          ],
+          ""
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            "a\tb"
+          ],
+          "AB"
+        ],
+        [
+          [
+            "  "
+          ],
+          ""
+        ],
+        [
+          [
+            "single"
+          ],
+          "S"
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Original implementation",
+          "code": "def solve(name):\n    return ''.join(part[0].upper() for part in name.split(' '))\n"
+        },
+        {
+          "name": "Focused implementation",
+          "code": "def solve(name):\n    return ''.join(part[0].upper() for part in name.split())\n"
+        },
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(name):\n    return 'AL'\n"
+        },
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(name):\n    lookup = {\"(' Ada  Lovelace ',)\": 'AL', \"('Grace Hopper',)\": 'GH', \"('',)\": ''}\n    return lookup.get(repr((name,)))\n"
+        },
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(name):\n    # Preserve the behavior outside the reported example.\n    return ''.join(part[0].upper() for part in name.split())\n"
+        },
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(name):\n    return ''.join(part[0].upper() for part in name.split(' ') if part)\n"
+        }
+      ]
+    },
+    {
+      "id": "unique",
+      "family": "collections",
+      "title": "Deduplication changes order",
+      "issue": "Deduplicate hashable values, keeping the first occurrence and preserving input order.",
+      "source": "def solve(values):\n    return sorted(set(values))\n",
+      "public": [
+        [
+          [
+            [
+              3,
+              1,
+              3,
+              2
+            ]
+          ],
+          [
+            3,
+            1,
+            2
+          ]
+        ],
+        [
+          [
+            []
+          ],
+          []
+        ],
+        [
+          [
+            [
+              2,
+              2
+            ]
+          ],
+          [
+            2
+          ]
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            [
+              9,
+              8,
+              9,
+              7
+            ]
+          ],
+          [
+            9,
+            8,
+            7
+          ]
+        ],
+        [
+          [
+            [
+              "b",
+              "a",
+              "b"
+            ]
+          ],
+          [
+            "b",
+            "a"
+          ]
+        ],
+        [
+          [
+            [
+              0,
+              -1,
+              0
+            ]
+          ],
+          [
+            0,
+            -1
+          ]
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(values):\n    lookup = {'([3, 1, 3, 2],)': [3, 1, 2], '([],)': [], '([2, 2],)': [2]}\n    return lookup.get(repr((values,)))\n"
+        },
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(values):\n    return list(set(values))\n"
+        },
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(values):\n    # Preserve the behavior outside the reported example.\n    return list(dict.fromkeys(values))\n"
+        },
+        {
+          "name": "Original implementation",
+          "code": "def solve(values):\n    return sorted(set(values))\n"
+        },
+        {
+          "name": "Focused implementation",
+          "code": "def solve(values):\n    return list(dict.fromkeys(values))\n"
+        },
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(values):\n    return [3, 1, 2]\n"
+        }
+      ]
+    },
+    {
+      "id": "counts",
+      "family": "collections",
+      "title": "Counter ignores repeated values",
+      "issue": "Return a dictionary counting every value in a list of strings.",
+      "source": "def solve(values):\n    return {x: 1 for x in values}\n",
+      "public": [
+        [
+          [
+            [
+              "a",
+              "a",
+              "b"
+            ]
+          ],
+          {
+            "a": 2,
+            "b": 1
+          }
+        ],
+        [
+          [
+            []
+          ],
+          {}
+        ],
+        [
+          [
+            [
+              "x"
+            ]
+          ],
+          {
+            "x": 1
+          }
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            [
+              "x",
+              "x",
+              "x"
+            ]
+          ],
+          {
+            "x": 3
+          }
+        ],
+        [
+          [
+            [
+              "a",
+              "b",
+              "a",
+              "b"
+            ]
+          ],
+          {
+            "a": 2,
+            "b": 2
+          }
+        ],
+        [
+          [
+            [
+              ""
+            ]
+          ],
+          {
+            "": 1
+          }
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(values):\n    return {x: min(values.count(x), 2) for x in values}\n"
+        },
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(values):\n    return {'a': 2, 'b': 1}\n"
+        },
+        {
+          "name": "Focused implementation",
+          "code": "def solve(values):\n    counts = {}\n    for value in values:\n        counts[value] = counts.get(value, 0) + 1\n    return counts\n"
+        },
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(values):\n    lookup = {\"(['a', 'a', 'b'],)\": {'a': 2, 'b': 1}, '([],)': {}, \"(['x'],)\": {'x': 1}}\n    return lookup.get(repr((values,)))\n"
+        },
+        {
+          "name": "Original implementation",
+          "code": "def solve(values):\n    return {x: 1 for x in values}\n"
+        },
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(values):\n    # Preserve the behavior outside the reported example.\n    counts = {}\n    for value in values:\n        counts[value] = counts.get(value, 0) + 1\n    return counts\n"
+        }
+      ]
+    },
+    {
+      "id": "flatten",
+      "family": "collections",
+      "title": "Flatten keeps only the first nested list",
+      "issue": "Flatten one level of lists while preserving order, including empty nested lists.",
+      "source": "def solve(groups):\n    return groups[0] if groups else []\n",
+      "public": [
+        [
+          [
+            [
+              [
+                1,
+                2
+              ],
+              [
+                3
+              ]
+            ]
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        [
+          [
+            []
+          ],
+          []
+        ],
+        [
+          [
+            [
+              [],
+              [
+                4
+              ]
+            ]
+          ],
+          [
+            4
+          ]
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            [
+              [
+                1
+              ],
+              [],
+              [
+                2
+              ],
+              [
+                3
+              ]
+            ]
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        [
+          [
+            [
+              [],
+              []
+            ]
+          ],
+          []
+        ],
+        [
+          [
+            [
+              [
+                "a"
+              ],
+              [
+                "b"
+              ]
+            ]
+          ],
+          [
+            "a",
+            "b"
+          ]
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(groups):\n    return sum(groups[:2], [])\n"
+        },
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(groups):\n    # Preserve the behavior outside the reported example.\n    return [x for group in groups for x in group]\n"
+        },
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(groups):\n    return [1, 2, 3]\n"
+        },
+        {
+          "name": "Original implementation",
+          "code": "def solve(groups):\n    return groups[0] if groups else []\n"
+        },
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(groups):\n    lookup = {'([[1, 2], [3]],)': [1, 2, 3], '([],)': [], '([[], [4]],)': [4]}\n    return lookup.get(repr((groups,)))\n"
+        },
+        {
+          "name": "Focused implementation",
+          "code": "def solve(groups):\n    return [x for group in groups for x in group]\n"
+        }
+      ]
+    },
+    {
+      "id": "clamp",
+      "family": "boundaries",
+      "title": "Clamp reverses the lower and upper bound",
+      "issue": "Clamp x to inclusive [lower,upper]. Assume lower <= upper.",
+      "source": "def solve(x, lower, upper):\n    return max(upper, min(lower, x))\n",
+      "public": [
+        [
+          [
+            5,
+            0,
+            10
+          ],
+          5
+        ],
+        [
+          [
+            -1,
+            0,
+            10
+          ],
+          0
+        ],
+        [
+          [
+            20,
+            0,
+            10
+          ],
+          10
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            -8,
+            -10,
+            -5
+          ],
+          -8
+        ],
+        [
+          [
+            4,
+            4,
+            4
+          ],
+          4
+        ],
+        [
+          [
+            0.5,
+            0,
+            1
+          ],
+          0.5
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(x, lower, upper):\n    return max(lower,x)\n"
+        },
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(x, lower, upper):\n    # Preserve the behavior outside the reported example.\n    return min(upper, max(lower, x))\n"
+        },
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(x, lower, upper):\n    lookup = {'(5, 0, 10)': 5, '(-1, 0, 10)': 0, '(20, 0, 10)': 10}\n    return lookup.get(repr((x, lower, upper,)))\n"
+        },
+        {
+          "name": "Original implementation",
+          "code": "def solve(x, lower, upper):\n    return max(upper, min(lower, x))\n"
+        },
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(x, lower, upper):\n    return 5\n"
+        },
+        {
+          "name": "Focused implementation",
+          "code": "def solve(x, lower, upper):\n    return min(upper, max(lower, x))\n"
+        }
+      ]
+    },
+    {
+      "id": "overlap",
+      "family": "boundaries",
+      "title": "Half-open intervals count touching edges",
+      "issue": "For nonempty half-open intervals [a,b) and [c,d), report whether they overlap.",
+      "source": "def solve(a, b, c, d):\n    return max(a,c) <= min(b,d)\n",
+      "public": [
+        [
+          [
+            1,
+            3,
+            3,
+            5
+          ],
+          false
+        ],
+        [
+          [
+            1,
+            4,
+            2,
+            6
+          ],
+          true
+        ],
+        [
+          [
+            1,
+            2,
+            4,
+            5
+          ],
+          false
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            -3,
+            0,
+            0,
+            2
+          ],
+          false
+        ],
+        [
+          [
+            0,
+            10,
+            2,
+            3
+          ],
+          true
+        ],
+        [
+          [
+            2,
+            3,
+            0,
+            10
+          ],
+          true
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Focused implementation",
+          "code": "def solve(a, b, c, d):\n    return max(a,c) < min(b,d)\n"
+        },
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(a, b, c, d):\n    return False\n"
+        },
+        {
+          "name": "Original implementation",
+          "code": "def solve(a, b, c, d):\n    return max(a,c) <= min(b,d)\n"
+        },
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(a, b, c, d):\n    return a < c < b\n"
+        },
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(a, b, c, d):\n    # Preserve the behavior outside the reported example.\n    return max(a,c) < min(b,d)\n"
+        },
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(a, b, c, d):\n    lookup = {'(1, 3, 3, 5)': False, '(1, 4, 2, 6)': True, '(1, 2, 4, 5)': False}\n    return lookup.get(repr((a, b, c, d,)))\n"
+        }
+      ]
+    },
+    {
+      "id": "expiry",
+      "family": "boundaries",
+      "title": "Token remains valid at its exact expiry",
+      "issue": "A token is expired when now is greater than or equal to expiry. Both timestamps are numeric.",
+      "source": "def solve(now, expiry):\n    return now > expiry\n",
+      "public": [
+        [
+          [
+            100,
+            100
+          ],
+          true
+        ],
+        [
+          [
+            99,
+            100
+          ],
+          false
+        ],
+        [
+          [
+            101,
+            100
+          ],
+          true
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            0,
+            0
+          ],
+          true
+        ],
+        [
+          [
+            -1,
+            0
+          ],
+          false
+        ],
+        [
+          [
+            1.25,
+            1.25
+          ],
+          true
+        ],
+        [
+          [
+            0.1,
+            0.9
+          ],
+          false
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Original implementation",
+          "code": "def solve(now, expiry):\n    return now > expiry\n"
+        },
+        {
+          "name": "Focused implementation",
+          "code": "def solve(now, expiry):\n    return now >= expiry\n"
+        },
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(now, expiry):\n    return True\n"
+        },
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(now, expiry):\n    return int(now) >= int(expiry)\n"
+        },
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(now, expiry):\n    # Preserve the behavior outside the reported example.\n    return now >= expiry\n"
+        },
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(now, expiry):\n    lookup = {'(100, 100)': True, '(99, 100)': False, '(101, 100)': True}\n    return lookup.get(repr((now, expiry,)))\n"
+        }
+      ]
+    },
+    {
+      "id": "parse-bool",
+      "family": "parsing",
+      "title": "Boolean parser treats false strings as truthy",
+      "issue": "Trim and lowercase a string. True forms: true,yes,1,on. False forms: false,no,0,off. Other strings return None.",
+      "source": "def solve(text):\n    return bool(text)\n",
+      "public": [
+        [
+          [
+            "true"
+          ],
+          true
+        ],
+        [
+          [
+            "false"
+          ],
+          false
+        ],
+        [
+          [
+            "unknown"
+          ],
+          null
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            " YES "
+          ],
+          true
+        ],
+        [
+          [
+            "0"
+          ],
+          false
+        ],
+        [
+          [
+            "On"
+          ],
+          true
+        ],
+        [
+          [
+            ""
+          ],
+          null
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(text):\n    if text == 'true': return True\n    if text == 'false': return False\n    return None\n"
+        },
+        {
+          "name": "Focused implementation",
+          "code": "def solve(text):\n    value = text.strip().lower()\n    if value in ('true','yes','1','on'): return True\n    if value in ('false','no','0','off'): return False\n    return None\n"
+        },
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(text):\n    return True\n"
+        },
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(text):\n    lookup = {\"('true',)\": True, \"('false',)\": False, \"('unknown',)\": None}\n    return lookup.get(repr((text,)))\n"
+        },
+        {
+          "name": "Original implementation",
+          "code": "def solve(text):\n    return bool(text)\n"
+        },
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(text):\n    # Preserve the behavior outside the reported example.\n    value = text.strip().lower()\n    if value in ('true','yes','1','on'): return True\n    if value in ('false','no','0','off'): return False\n    return None\n"
+        }
+      ]
+    },
+    {
+      "id": "csv-integers",
+      "family": "parsing",
+      "title": "Integer parser fails on empty fields",
+      "issue": "Parse comma-separated integers, ignoring blank fields and surrounding whitespace.",
+      "source": "def solve(text):\n    return [int(x) for x in text.split(',')]\n",
+      "public": [
+        [
+          [
+            "1,,2"
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          [
+            ""
+          ],
+          []
+        ],
+        [
+          [
+            "3,4"
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            " , -5, 0, "
+          ],
+          [
+            -5,
+            0
+          ]
+        ],
+        [
+          [
+            ",,,"
+          ],
+          []
+        ],
+        [
+          [
+            "12"
+          ],
+          [
+            12
+          ]
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(text):\n    return [int(x) for x in text.split(',') if x]\n"
+        },
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(text):\n    return [1, 2]\n"
+        },
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(text):\n    lookup = {\"('1,,2',)\": [1, 2], \"('',)\": [], \"('3,4',)\": [3, 4]}\n    return lookup.get(repr((text,)))\n"
+        },
+        {
+          "name": "Focused implementation",
+          "code": "def solve(text):\n    return [int(x.strip()) for x in text.split(',') if x.strip()]\n"
+        },
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(text):\n    # Preserve the behavior outside the reported example.\n    return [int(x.strip()) for x in text.split(',') if x.strip()]\n"
+        },
+        {
+          "name": "Original implementation",
+          "code": "def solve(text):\n    return [int(x) for x in text.split(',')]\n"
+        }
+      ]
+    },
+    {
+      "id": "key-value",
+      "family": "parsing",
+      "title": "Key-value parser splits values containing equals",
+      "issue": "Parse first '=' into a stripped key and value. A line without '=' returns None.",
+      "source": "def solve(line):\n    parts = line.split('=')\n    return [parts[0], parts[1]] if len(parts)==2 else None\n",
+      "public": [
+        [
+          [
+            "name=alice"
+          ],
+          [
+            "name",
+            "alice"
+          ]
+        ],
+        [
+          [
+            "url=a=b"
+          ],
+          [
+            "url",
+            "a=b"
+          ]
+        ],
+        [
+          [
+            "none"
+          ],
+          null
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            " x = y "
+          ],
+          [
+            "x",
+            "y"
+          ]
+        ],
+        [
+          [
+            "a="
+          ],
+          [
+            "a",
+            ""
+          ]
+        ],
+        [
+          [
+            "=x=y"
+          ],
+          [
+            "",
+            "x=y"
+          ]
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(line):\n    return ['name', 'alice']\n"
+        },
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(line):\n    # Preserve the behavior outside the reported example.\n    if '=' not in line: return None\n    key, value = line.split('=', 1)\n    return [key.strip(), value.strip()]\n"
+        },
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(line):\n    lookup = {\"('name=alice',)\": ['name', 'alice'], \"('url=a=b',)\": ['url', 'a=b'], \"('none',)\": None}\n    return lookup.get(repr((line,)))\n"
+        },
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(line):\n    if '=' not in line: return None\n    return line.split('=',1)\n"
+        },
+        {
+          "name": "Focused implementation",
+          "code": "def solve(line):\n    if '=' not in line: return None\n    key, value = line.split('=', 1)\n    return [key.strip(), value.strip()]\n"
+        },
+        {
+          "name": "Original implementation",
+          "code": "def solve(line):\n    parts = line.split('=')\n    return [parts[0], parts[1]] if len(parts)==2 else None\n"
+        }
+      ]
+    },
+    {
+      "id": "weighted",
+      "family": "statistics",
+      "title": "Weighted mean divides by observation count",
+      "issue": "Return weighted mean of value/weight pairs, or 0.0 when total weight is zero.",
+      "source": "def solve(pairs):\n    return sum(v*w for v,w in pairs)/len(pairs) if pairs else 0.0\n",
+      "public": [
+        [
+          [
+            [
+              [
+                10,
+                1
+              ],
+              [
+                20,
+                3
+              ]
+            ]
+          ],
+          17.5
+        ],
+        [
+          [
+            []
+          ],
+          0.0
+        ],
+        [
+          [
+            [
+              [
+                3,
+                0
+              ]
+            ]
+          ],
+          0.0
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            [
+              [
+                5,
+                2
+              ]
+            ]
+          ],
+          5.0
+        ],
+        [
+          [
+            [
+              [
+                1,
+                1
+              ],
+              [
+                3,
+                1
+              ]
+            ]
+          ],
+          2.0
+        ],
+        [
+          [
+            [
+              [
+                4,
+                0
+              ],
+              [
+                7,
+                2
+              ]
+            ]
+          ],
+          7.0
+        ],
+        [
+          [
+            [
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                2
+              ]
+            ]
+          ],
+          1.6666666666666667
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(pairs):\n    weight = sum(w for _,w in pairs)\n    return round(sum(v*w for v,w in pairs)/weight,1) if weight else 0.0\n"
+        },
+        {
+          "name": "Original implementation",
+          "code": "def solve(pairs):\n    return sum(v*w for v,w in pairs)/len(pairs) if pairs else 0.0\n"
+        },
+        {
+          "name": "Focused implementation",
+          "code": "def solve(pairs):\n    weight = sum(w for _,w in pairs)\n    return sum(v*w for v,w in pairs)/weight if weight else 0.0\n"
+        },
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(pairs):\n    # Preserve the behavior outside the reported example.\n    weight = sum(w for _,w in pairs)\n    return sum(v*w for v,w in pairs)/weight if weight else 0.0\n"
+        },
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(pairs):\n    return 17.5\n"
+        },
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(pairs):\n    lookup = {'([[10, 1], [20, 3]],)': 17.5, '([],)': 0.0, '([[3, 0]],)': 0.0}\n    return lookup.get(repr((pairs,)))\n"
+        }
+      ]
+    },
+    {
+      "id": "moving-mean",
+      "family": "statistics",
+      "title": "Moving average has an off-by-one window",
+      "issue": "Return the mean of each full consecutive window. width positive; fewer elements than width yields [].",
+      "source": "def solve(values, width):\n    return [sum(values[i:i+width])/width for i in range(len(values)-width)]\n",
+      "public": [
+        [
+          [
+            [
+              1,
+              2,
+              3
+            ],
+            2
+          ],
+          [
+            1.5,
+            2.5
+          ]
+        ],
+        [
+          [
+            [
+              1
+            ],
+            2
+          ],
+          []
+        ],
+        [
+          [
+            [
+              4,
+              6
+            ],
+            2
+          ],
+          [
+            5.0
+          ]
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            [
+              1,
+              2,
+              3
+            ],
+            1
+          ],
+          [
+            1.0,
+            2.0,
+            3.0
+          ]
+        ],
+        [
+          [
+            [],
+            3
+          ],
+          []
+        ],
+        [
+          [
+            [
+              2,
+              4,
+              6,
+              8
+            ],
+            3
+          ],
+          [
+            4.0,
+            6.0
+          ]
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(values, width):\n    lookup = {'([1, 2, 3], 2)': [1.5, 2.5], '([1], 2)': [], '([4, 6], 2)': [5.0]}\n    return lookup.get(repr((values, width,)))\n"
+        },
+        {
+          "name": "Focused implementation",
+          "code": "def solve(values, width):\n    return [sum(values[i:i+width])/width for i in range(len(values)-width+1)]\n"
+        },
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(values, width):\n    # Preserve the behavior outside the reported example.\n    return [sum(values[i:i+width])/width for i in range(len(values)-width+1)]\n"
+        },
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(values, width):\n    return [1.5, 2.5]\n"
+        },
+        {
+          "name": "Original implementation",
+          "code": "def solve(values, width):\n    return [sum(values[i:i+width])/width for i in range(len(values)-width)]\n"
+        },
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(values, width):\n    return [sum(values[i:i+width])/width for i in range(0,len(values)-width+1,width)]\n"
+        }
+      ]
+    },
+    {
+      "id": "variance",
+      "family": "statistics",
+      "title": "Population variance uses sample denominator",
+      "issue": "Return population variance; empty list gives 0.0.",
+      "source": "def solve(values):\n    if len(values)<2: return 0.0\n    mean = sum(values)/len(values)\n    return sum((v-mean)**2 for v in values)/(len(values)-1)\n",
+      "public": [
+        [
+          [
+            [
+              1,
+              3
+            ]
+          ],
+          1.0
+        ],
+        [
+          [
+            []
+          ],
+          0.0
+        ],
+        [
+          [
+            [
+              2
+            ]
+          ],
+          0.0
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            [
+              1,
+              2,
+              3
+            ]
+          ],
+          0.6666666666666666
+        ],
+        [
+          [
+            [
+              5,
+              5
+            ]
+          ],
+          0.0
+        ],
+        [
+          [
+            [
+              -2,
+              2
+            ]
+          ],
+          4.0
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Focused implementation",
+          "code": "def solve(values):\n    if not values: return 0.0\n    mean = sum(values)/len(values)\n    return sum((v-mean)**2 for v in values)/len(values)\n"
+        },
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(values):\n    if not values: return 0.0\n    mean = sum(values)/len(values)\n    return round(sum((v-mean)**2 for v in values)/len(values),1)\n"
+        },
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(values):\n    return 1.0\n"
+        },
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(values):\n    lookup = {'([1, 3],)': 1.0, '([],)': 0.0, '([2],)': 0.0}\n    return lookup.get(repr((values,)))\n"
+        },
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(values):\n    # Preserve the behavior outside the reported example.\n    if not values: return 0.0\n    mean = sum(values)/len(values)\n    return sum((v-mean)**2 for v in values)/len(values)\n"
+        },
+        {
+          "name": "Original implementation",
+          "code": "def solve(values):\n    if len(values)<2: return 0.0\n    mean = sum(values)/len(values)\n    return sum((v-mean)**2 for v in values)/(len(values)-1)\n"
+        }
+      ]
+    },
+    {
+      "id": "merge",
+      "family": "ordering",
+      "title": "Sorted merge discards duplicates",
+      "issue": "Combine two sorted lists into one sorted list, retaining every occurrence.",
+      "source": "def solve(left, right):\n    return sorted(set(left + right))\n",
+      "public": [
+        [
+          [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            1,
+            2,
+            2,
+            3
+          ]
+        ],
+        [
+          [
+            [],
+            [
+              1
+            ]
+          ],
+          [
+            1
+          ]
+        ],
+        [
+          [
+            [],
+            []
+          ],
+          []
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            [
+              2,
+              2
+            ],
+            [
+              2
+            ]
+          ],
+          [
+            2,
+            2,
+            2
+          ]
+        ],
+        [
+          [
+            [
+              -1,
+              5
+            ],
+            [
+              -2,
+              3
+            ]
+          ],
+          [
+            -2,
+            -1,
+            3,
+            5
+          ]
+        ],
+        [
+          [
+            [
+              1
+            ],
+            []
+          ],
+          [
+            1
+          ]
+        ],
+        [
+          [
+            [
+              1
+            ],
+            [
+              2,
+              2
+            ]
+          ],
+          [
+            1,
+            2,
+            2
+          ]
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(left, right):\n    lookup = {'([1, 2], [2, 3])': [1, 2, 2, 3], '([], [1])': [1], '([], [])': []}\n    return lookup.get(repr((left, right,)))\n"
+        },
+        {
+          "name": "Original implementation",
+          "code": "def solve(left, right):\n    return sorted(set(left + right))\n"
+        },
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(left, right):\n    # Preserve the behavior outside the reported example.\n    return sorted(left + right)\n"
+        },
+        {
+          "name": "Focused implementation",
+          "code": "def solve(left, right):\n    return sorted(left + right)\n"
+        },
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(left, right):\n    return sorted(left + list(set(right)))\n"
+        },
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(left, right):\n    return [1, 2, 2, 3]\n"
+        }
+      ]
+    },
+    {
+      "id": "top-k",
+      "family": "ordering",
+      "title": "Top-k returns smallest scores",
+      "issue": "Return the k largest numbers in descending order, preserving duplicates. k <= 0 returns [].",
+      "source": "def solve(values, k):\n    return sorted(values)[:k]\n",
+      "public": [
+        [
+          [
+            [
+              1,
+              5,
+              3
+            ],
+            2
+          ],
+          [
+            5,
+            3
+          ]
+        ],
+        [
+          [
+            [
+              2,
+              2,
+              1
+            ],
+            2
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        [
+          [
+            [],
+            3
+          ],
+          []
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            [
+              1,
+              3
+            ],
+            -1
+          ],
+          []
+        ],
+        [
+          [
+            [
+              7
+            ],
+            0
+          ],
+          []
+        ],
+        [
+          [
+            [
+              2,
+              9
+            ],
+            5
+          ],
+          [
+            9,
+            2
+          ]
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(values, k):\n    # Preserve the behavior outside the reported example.\n    return sorted(values, reverse=True)[:k] if k > 0 else []\n"
+        },
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(values, k):\n    return [5, 3]\n"
+        },
+        {
+          "name": "Focused implementation",
+          "code": "def solve(values, k):\n    return sorted(values, reverse=True)[:k] if k > 0 else []\n"
+        },
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(values, k):\n    lookup = {'([1, 5, 3], 2)': [5, 3], '([2, 2, 1], 2)': [2, 2], '([], 3)': []}\n    return lookup.get(repr((values, k,)))\n"
+        },
+        {
+          "name": "Original implementation",
+          "code": "def solve(values, k):\n    return sorted(values)[:k]\n"
+        },
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(values, k):\n    return sorted(values, reverse=True)[:k]\n"
+        }
+      ]
+    },
+    {
+      "id": "stable-sort",
+      "family": "ordering",
+      "title": "Record sorter uses descending score",
+      "issue": "Sort [name,score] records by ascending score and preserve original order on ties.",
+      "source": "def solve(records):\n    return sorted(records, key=lambda r: r[1], reverse=True)\n",
+      "public": [
+        [
+          [
+            [
+              [
+                "b",
+                2
+              ],
+              [
+                "a",
+                1
+              ]
+            ]
+          ],
+          [
+            [
+              "a",
+              1
+            ],
+            [
+              "b",
+              2
+            ]
+          ]
+        ],
+        [
+          [
+            []
+          ],
+          []
+        ],
+        [
+          [
+            [
+              [
+                "x",
+                1
+              ]
+            ]
+          ],
+          [
+            [
+              "x",
+              1
+            ]
+          ]
+        ]
+      ],
+      "oracle": [
+        [
+          [
+            [
+              [
+                "z",
+                2
+              ],
+              [
+                "a",
+                2
+              ],
+              [
+                "m",
+                1
+              ]
+            ]
+          ],
+          [
+            [
+              "m",
+              1
+            ],
+            [
+              "z",
+              2
+            ],
+            [
+              "a",
+              2
+            ]
+          ]
+        ],
+        [
+          [
+            [
+              [
+                "b",
+                0
+              ],
+              [
+                "a",
+                0
+              ]
+            ]
+          ],
+          [
+            [
+              "b",
+              0
+            ],
+            [
+              "a",
+              0
+            ]
+          ]
+        ]
+      ],
+      "candidates": [
+        {
+          "name": "Partial adjustment",
+          "code": "def solve(records):\n    return sorted(records, key=lambda r: (r[1],r[0]))\n"
+        },
+        {
+          "name": "Original implementation",
+          "code": "def solve(records):\n    return sorted(records, key=lambda r: r[1], reverse=True)\n"
+        },
+        {
+          "name": "Focused implementation",
+          "code": "def solve(records):\n    return sorted(records, key=lambda r: r[1])\n"
+        },
+        {
+          "name": "Alternative implementation",
+          "code": "def solve(records):\n    # Preserve the behavior outside the reported example.\n    return sorted(records, key=lambda r: r[1])\n"
+        },
+        {
+          "name": "Case-specific replacement",
+          "code": "def solve(records):\n    lookup = {\"([['b', 2], ['a', 1]],)\": [['a', 1], ['b', 2]], '([],)': [], \"([['x', 1]],)\": [['x', 1]]}\n    return lookup.get(repr((records,)))\n"
+        },
+        {
+          "name": "Early-return alternative",
+          "code": "def solve(records):\n    return [['a', 1], ['b', 2]]\n"
+        }
+      ]
+    }
+  ]
+}

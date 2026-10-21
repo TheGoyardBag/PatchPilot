@@ -1,0 +1,150 @@
+{
+  "dataset": "24 original repair tasks / 144 authored candidates",
+  "seed": 17,
+  "split_unit": "Entire bug family",
+  "selection_gate": "Only changed patches with all public tests passing are eligible",
+  "early_stopping": "Validation BCE; test labels never used to select weights or threshold",
+  "best_epoch": 19,
+  "epochs_run": 59,
+  "numpy_torch_max_abs_error": 5.960464477539063e-08,
+  "evaluations": {
+    "train": {
+      "pairwise_mlp": {
+        "tasks": 15,
+        "top1_correct": 15,
+        "top1_accuracy": 1.0,
+        "mean_reciprocal_rank": 1.0,
+        "candidate_auc": 0.9702777777777778,
+        "public_passing_but_oracle_failing_candidates": 27
+      },
+      "logistic_regression": {
+        "tasks": 15,
+        "top1_correct": 15,
+        "top1_accuracy": 1.0,
+        "mean_reciprocal_rank": 1.0,
+        "candidate_auc": 0.9808333333333333,
+        "public_passing_but_oracle_failing_candidates": 27
+      },
+      "static_only_ablation": {
+        "tasks": 15,
+        "top1_correct": 15,
+        "top1_accuracy": 1.0,
+        "mean_reciprocal_rank": 1.0,
+        "candidate_auc": 0.9730555555555556,
+        "public_passing_but_oracle_failing_candidates": 27
+      },
+      "test_only_baseline": {
+        "tasks": 15,
+        "top1_correct": 9,
+        "top1_accuracy": 0.6,
+        "mean_reciprocal_rank": 0.788888888888889,
+        "candidate_auc": 0.775,
+        "public_passing_but_oracle_failing_candidates": 27
+      },
+      "smallest_passing_patch": {
+        "tasks": 15,
+        "top1_correct": 10,
+        "top1_accuracy": 0.6666666666666666,
+        "mean_reciprocal_rank": 0.8,
+        "candidate_auc": 0.2966666666666667,
+        "public_passing_but_oracle_failing_candidates": 27
+      }
+    },
+    "validation": {
+      "pairwise_mlp": {
+        "tasks": 3,
+        "top1_correct": 3,
+        "top1_accuracy": 1.0,
+        "mean_reciprocal_rank": 1.0,
+        "candidate_auc": 0.9444444444444444,
+        "public_passing_but_oracle_failing_candidates": 4
+      },
+      "logistic_regression": {
+        "tasks": 3,
+        "top1_correct": 3,
+        "top1_accuracy": 1.0,
+        "mean_reciprocal_rank": 1.0,
+        "candidate_auc": 0.986111111111111,
+        "public_passing_but_oracle_failing_candidates": 4
+      },
+      "static_only_ablation": {
+        "tasks": 3,
+        "top1_correct": 3,
+        "top1_accuracy": 1.0,
+        "mean_reciprocal_rank": 1.0,
+        "candidate_auc": 0.9444444444444444,
+        "public_passing_but_oracle_failing_candidates": 4
+      },
+      "test_only_baseline": {
+        "tasks": 3,
+        "top1_correct": 2,
+        "top1_accuracy": 0.6666666666666666,
+        "mean_reciprocal_rank": 0.8333333333333334,
+        "candidate_auc": 0.8333333333333334,
+        "public_passing_but_oracle_failing_candidates": 4
+      },
+      "smallest_passing_patch": {
+        "tasks": 3,
+        "top1_correct": 2,
+        "top1_accuracy": 0.6666666666666666,
+        "mean_reciprocal_rank": 0.8333333333333334,
+        "candidate_auc": 0.3263888888888889,
+        "public_passing_but_oracle_failing_candidates": 4
+      }
+    },
+    "test": {
+      "pairwise_mlp": {
+        "tasks": 6,
+        "top1_correct": 6,
+        "top1_accuracy": 1.0,
+        "mean_reciprocal_rank": 1.0,
+        "candidate_auc": 0.9166666666666667,
+        "public_passing_but_oracle_failing_candidates": 11
+      },
+      "logistic_regression": {
+        "tasks": 6,
+        "top1_correct": 6,
+        "top1_accuracy": 1.0,
+        "mean_reciprocal_rank": 1.0,
+        "candidate_auc": 0.9409722222222223,
+        "public_passing_but_oracle_failing_candidates": 11
+      },
+      "static_only_ablation": {
+        "tasks": 6,
+        "top1_correct": 6,
+        "top1_accuracy": 1.0,
+        "mean_reciprocal_rank": 1.0,
+        "candidate_auc": 0.9305555555555556,
+        "public_passing_but_oracle_failing_candidates": 11
+      },
+      "test_only_baseline": {
+        "tasks": 6,
+        "top1_correct": 2,
+        "top1_accuracy": 0.3333333333333333,
+        "mean_reciprocal_rank": 0.6666666666666666,
+        "candidate_auc": 0.7708333333333334,
+        "public_passing_but_oracle_failing_candidates": 11
+      },
+      "smallest_passing_patch": {
+        "tasks": 6,
+        "top1_correct": 4,
+        "top1_accuracy": 0.6666666666666666,
+        "mean_reciprocal_rank": 0.8333333333333334,
+        "candidate_auc": 0.30729166666666663,
+        "public_passing_but_oracle_failing_candidates": 11
+      }
+    }
+  },
+  "training_seconds": 0.749,
+  "limitations": [
+    "Small authored benchmark; no SWE-bench or live LLM resolution claims.",
+    "Authored overfit patches have recognizable artifacts; generalization is unproven.",
+    "Only six test tasks; point estimates have high uncertainty.",
+    "Full public test success is necessary, not sufficient, for semantic correctness."
+  ],
+  "test_top1_bootstrap_95_percent_interval": [
+    1.0,
+    1.0
+  ],
+  "uncertainty_note": "A small empirical bootstrap can be degenerate when all tasks succeed. It does not establish a narrow population confidence interval."
+}

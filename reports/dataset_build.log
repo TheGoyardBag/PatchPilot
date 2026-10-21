@@ -1,0 +1,51 @@
+{
+  "provenance": "Original authored repair fixtures and candidate patches; no LLM outputs",
+  "tasks": 24,
+  "candidates": 144,
+  "test_processes": 288,
+  "executed_test_cases": 888,
+  "feature_names": [
+    "public_pass_fraction",
+    "public_error_fraction",
+    "public_test_count_log",
+    "public_complete_pass",
+    "added_lines_log",
+    "deleted_lines_log",
+    "changed_fraction",
+    "ast_nodes_log",
+    "ast_node_delta",
+    "constant_fraction",
+    "string_literal_chars_log",
+    "numeric_literals_log",
+    "dict_entries_log",
+    "bare_constant_returns",
+    "branches_log",
+    "loops_log",
+    "calls_log",
+    "repr_calls",
+    "functions_removed",
+    "token_overlap",
+    "source_changed",
+    "file_count_log"
+  ],
+  "sha256": "ce0405d47ce00e26aa07a1e860ce897c2a3826112690eabc382a2bc5fbaae749",
+  "corpus_sha256": "55578d6e5fedf5507d08020347bf0516c081a979d662f17537ed116fd36d64c6",
+  "split_families": {
+    "train": [
+      "boundaries",
+      "collections",
+      "parsing",
+      "slicing",
+      "strings"
+    ],
+    "validation": [
+      "arithmetic"
+    ],
+    "test": [
+      "ordering",
+      "statistics"
+    ]
+  },
+  "elapsed_s": 4.2,
+  "runner": "trusted-demo (not an untrusted-code sandbox)"
+}

@@ -1,0 +1,82 @@
+TAP version 13
+# Subtest: escapes hostile strings without rendering HTML
+ok 1 - escapes hostile strings without rendering HTML
+  ---
+  duration_ms: 1.588646
+  type: 'test'
+  ...
+# Subtest: handles null text
+ok 2 - handles null text
+  ---
+  duration_ms: 0.185129
+  type: 'test'
+  ...
+# Subtest: ranking scores are displayed, not probability percentages
+ok 3 - ranking scores are displayed, not probability percentages
+  ---
+  duration_ms: 0.131728
+  type: 'test'
+  ...
+# Subtest: missing rank
+ok 4 - missing rank
+  ---
+  duration_ms: 0.083817
+  type: 'test'
+  ...
+# Subtest: test summary
+ok 5 - test summary
+  ---
+  duration_ms: 0.199991
+  type: 'test'
+  ...
+# Subtest: blocked summary
+ok 6 - blocked summary
+  ---
+  duration_ms: 0.090457
+  type: 'test'
+  ...
+# Subtest: approval color
+ok 7 - approval color
+  ---
+  duration_ms: 0.086841
+  type: 'test'
+  ...
+# Subtest: unknown statuses remain neutral
+ok 8 - unknown statuses remain neutral
+  ---
+  duration_ms: 0.068473
+  type: 'test'
+  ...
+# Subtest: parse event frame
+ok 9 - parse event frame
+  ---
+  duration_ms: 0.940439
+  type: 'test'
+  ...
+# Subtest: ignore heartbeat
+ok 10 - ignore heartbeat
+  ---
+  duration_ms: 0.334314
+  type: 'test'
+  ...
+# Subtest: CRLF event parsing
+ok 11 - CRLF event parsing
+  ---
+  duration_ms: 0.162355
+  type: 'test'
+  ...
+# Subtest: differentiate headers from added code
+ok 12 - differentiate headers from added code
+  ---
+  duration_ms: 0.095635
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 61.236301

@@ -1,0 +1,85 @@
+{
+  "python": "3.13.5",
+  "platform": "Linux",
+  "versions": {
+    "fastapi": "0.128.2",
+    "pydantic": "2.13.5",
+    "numpy": "2.3.5",
+    "torch": "2.10.0+cpu",
+    "scikit-learn": "1.8.0",
+    "pytest": "9.0.2",
+    "pytest-cov": "7.0.0",
+    "httpx": "0.28.1",
+    "uvicorn": "0.48.0",
+    "playwright": "1.57.0"
+  },
+  "python_tests": {
+    "passed": 128,
+    "skipped": 2,
+    "failed": 0,
+    "coverage_percent": 92.6673751328374,
+    "coverage_scope": "src/patchpilot Python statements excluding isolated harness.py; scripts and frontend not included"
+  },
+  "javascript_tests": {
+    "passed": 12,
+    "failed": 0
+  },
+  "browser_checks": {
+    "checks_passed": 13,
+    "checks": [
+      "login_gate",
+      "authenticated_catalog",
+      "run_real_fixture_tests",
+      "event_stream_content",
+      "diff_rendering",
+      "test_evidence",
+      "model_features",
+      "blocked_patch_not_approvable",
+      "human_review",
+      "approved_diff_export",
+      "evaluation_view",
+      "mobile_no_horizontal_overflow",
+      "no_browser_javascript_errors"
+    ],
+    "browser_errors": [],
+    "frontend": "Bundled no-build JavaScript dashboard",
+    "backend": "Real FastAPI server via in-memory fetch bridge; buffered SSE, shimmed session storage, no browser network/CSP validation",
+    "nextjs_tested": false,
+    "test_transport_bridge": true
+  },
+  "typescript": {
+    "kind": "TypeScript syntactic transpilation only, NOT dependency typecheck or Next.js build",
+    "files": [
+      "frontend/app/layout.tsx",
+      "frontend/app/page.tsx",
+      "frontend/components/workspace.tsx",
+      "frontend/next.config.ts"
+    ],
+    "errors": []
+  },
+  "dataset": {
+    "tasks": 24,
+    "candidate_patches": 144,
+    "test_processes": 288,
+    "executed_test_cases": 888
+  },
+  "model": {
+    "trained": true,
+    "export_max_absolute_error": 5.960464477539063e-08,
+    "test_tasks": 6,
+    "neural_top1": 6,
+    "logistic_top1": 6,
+    "real_world_accuracy_established": false
+  },
+  "editable_install": "Passed using existing dependencies and no-build-isolation.",
+  "not_live_validated": [
+    "Docker execution/image build",
+    "OpenAI API calls",
+    "GitHub API requests",
+    "LangGraph runtime",
+    "Next.js dependency typecheck and production build",
+    "remote GitHub Actions",
+    "cloud deployment"
+  ],
+  "release_extraction": "Passed: fresh extracted-source pytest, Node tests, compile checks, and actual CLI repair workflow. See archive_validation.json."
+}

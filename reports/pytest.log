@@ -1,0 +1,33 @@
+........................................................................ [ 55%]
+............s..........................................s..               [100%]
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.13.5-final-0 ________________
+
+Name                                 Stmts   Miss  Cover   Missing
+------------------------------------------------------------------
+src/patchpilot/__init__.py               0      0   100%
+src/patchpilot/api.py                  134     12    91%   46-47, 49, 90-91, 99, 104, 116-118, 125, 129
+src/patchpilot/benchmarks.py            42      1    98%   46
+src/patchpilot/cli.py                   46      0   100%
+src/patchpilot/config.py                32      0   100%
+src/patchpilot/engine/__init__.py        0      0   100%
+src/patchpilot/engine/github.py         17      0   100%
+src/patchpilot/engine/graph.py          18     10    44%   16-25
+src/patchpilot/engine/provider.py       70      2    97%   50-51
+src/patchpilot/engine/retrieval.py      56      2    96%   28-29
+src/patchpilot/engine/runner.py         82     11    87%   44, 49-51, 71, 80-81, 88, 93, 96-97
+src/patchpilot/engine/workflow.py      124     21    83%   47-49, 68, 118-137
+src/patchpilot/ml/__init__.py            0      0   100%
+src/patchpilot/ml/features.py           22      0   100%
+src/patchpilot/ml/model.py              31      2    94%   17, 23
+src/patchpilot/repositories.py          47      2    96%   48-49
+src/patchpilot/schemas.py               46      0   100%
+src/patchpilot/security.py              94      6    94%   39-40, 42, 51, 68, 87
+src/patchpilot/store.py                 80      0   100%
+------------------------------------------------------------------
+TOTAL                                  941     69    93%
+Coverage JSON written to file reports/coverage.json
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_runner.py:63: Docker execution explicitly disabled in this environment
+SKIPPED [1] tests/test_workflow.py:42: could not import 'langgraph': No module named 'langgraph'
+128 passed, 2 skipped in 5.45s

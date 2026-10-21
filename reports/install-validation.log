@@ -1,0 +1,14 @@
+WARNING: The directory '/home/oai/.cache/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+Obtaining file:///mnt/data/patchpilot
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: patchpilot-lab
+  Building editable for patchpilot-lab (pyproject.toml): started
+  Building editable for patchpilot-lab (pyproject.toml): finished with status 'done'
+  Created wheel for patchpilot-lab: filename=patchpilot_lab-0.1.0-0.editable-py3-none-any.whl size=6915 sha256=6b1fa042f7eafee1ca0a4075070b26a668bf8e89b3a95e8b8d19b917b0db5ba4
+  Stored in directory: /tmp/pip-ephem-wheel-cache-tu38f601/wheels/de/01/9a/06952727c27beea32db74c7482030dc69ddf349ea9bf835b35
+Successfully built patchpilot-lab
+Installing collected packages: patchpilot-lab
+Successfully installed patchpilot-lab-0.1.0

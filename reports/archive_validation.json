@@ -1,0 +1,54 @@
+{
+  "scope": "Actual fresh extraction of release ZIP; source imported from extracted checkout, not original tree",
+  "checks": [
+    {
+      "command": [
+        "/opt/pyvenv/bin/python",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "exit_code": 0,
+      "output": "........................................................................ [ 55%]\n............s..........................................s..               [100%]\n=========================== short test summary info ============================\nSKIPPED [1] tests/test_runner.py:63: Docker execution explicitly disabled in this environment\nSKIPPED [1] tests/test_workflow.py:42: could not import 'langgraph': No module named 'langgraph'\n128 passed, 2 skipped in 4.45s\n"
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "tests/web.test.mjs"
+      ],
+      "exit_code": 0,
+      "output": "TAP version 13\n# Subtest: escapes hostile strings without rendering HTML\nok 1 - escapes hostile strings without rendering HTML\n  ---\n  duration_ms: 1.585986\n  type: 'test'\n  ...\n# Subtest: handles null text\nok 2 - handles null text\n  ---\n  duration_ms: 0.155365\n  type: 'test'\n  ...\n# Subtest: ranking scores are displayed, not probability percentages\nok 3 - ranking scores are displayed, not probability percentages\n  ---\n  duration_ms: 0.107442\n  type: 'test'\n  ...\n# Subtest: missing rank\nok 4 - missing rank\n  ---\n  duration_ms: 0.082836\n  type: 'test'\n  ...\n# Subtest: test summary\nok 5 - test summary\n  ---\n  duration_ms: 0.135134\n  type: 'test'\n  ...\n# Subtest: blocked summary\nok 6 - blocked summary\n  ---\n  duration_ms: 0.239262\n  type: 'test'\n  ...\n# Subtest: approval color\nok 7 - approval color\n  ---\n  duration_ms: 0.127783\n  type: 'test'\n  ...\n# Subtest: unknown statuses remain neutral\nok 8 - unknown statuses remain neutral\n  ---\n  duration_ms: 0.076366\n  type: 'test'\n  ...\n# Subtest: parse event frame\nok 9 - parse event frame\n  ---\n  duration_ms: 1.037587\n  type: 'test'\n  ...\n# Subtest: ignore heartbeat\nok 10 - ignore heartbeat\n  ---\n  duration_ms: 0.507908\n  type: 'test'\n  ...\n# Subtest: CRLF event parsing\nok 11 - CRLF event parsing\n  ---\n  duration_ms: 0.157468\n  type: 'test'\n  ...\n# Subtest: differentiate headers from added code\nok 12 - differentiate headers from added code\n  ---\n  duration_ms: 0.09279\n  type: 'test'\n  ...\n1..12\n# tests 12\n# suites 0\n# pass 12\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 65.894284\n"
+    },
+    {
+      "command": [
+        "/opt/pyvenv/bin/python",
+        "-m",
+        "compileall",
+        "-q",
+        "src",
+        "scripts"
+      ],
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "/opt/pyvenv/bin/python",
+        "-m",
+        "patchpilot.cli",
+        "run",
+        "pagination"
+      ],
+      "exit_code": 0,
+      "output": "{\n  \"status\": \"awaiting_review\",\n  \"candidates\": 6,\n  \"provider\": {\n    \"provider\": \"demo\",\n    \"live_model\": false,\n    \"notes\": [\n      \"Candidate proposals are authored fixtures, not AI-generated. ML ranking and tests run locally.\"\n    ]\n  }\n}"
+    }
+  ],
+  "passed": true,
+  "files_excluded": [
+    "local tokens/databases",
+    "Python caches",
+    "node_modules",
+    ".venv"
+  ]
+}
